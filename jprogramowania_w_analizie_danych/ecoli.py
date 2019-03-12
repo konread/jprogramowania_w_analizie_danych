@@ -1,24 +1,13 @@
-import re as re
-import numpy as np
-
-def readByColumn(filename):
-    content = [[]]
-    
-    with open(filename) as f:
-        for x in [re.sub("\s+", ",", res.strip()) for res in f.readlines()]:
-            if len(content) == 1:
-                content = [[item] for item in x.split(',')]
-                continue
-            
-            for colNum, value in enumerate(x.split(',')):
-                content[colNum].append(value)
-
-    return content
+from libs import *
 
 content = readByColumn('ecoli.data')
+names=['SequenceName','mcg','gvh','lip','chg','aac','alm1','alm2']
 #print('\n'.join('{}: {}'.format(*k) for k in enumerate(content)))
-print('median = ' + str(np.median([float(x) for x in content[1]])))
-print('min = ' + str(np.min([float(x) for x in content[1]])))
-print('max = ' + str(np.max([float(x) for x in content[1]])))
 
-            
+for index in range(1,len(names)):
+    print('Attribute ' + names[index])
+    print('\tMedian = ' + str(findMedian(content[index])))
+    print('\tMax = ' + str(findMax(content[index])))
+    print('\tMin = ' + str(findMin(content[index])))
+    print('\tDominant = ' + str(findDominants(content[index])))
+
