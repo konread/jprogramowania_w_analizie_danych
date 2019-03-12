@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "jprogramowania_w_analizie_danych", "jprogramowania_w_analizie_danych\jprogramowania_w_analizie_danych.pyproj", "{09CB8146-F117-414F-B1F7-8CEFA2306F58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09CB8146-F117-414F-B1F7-8CEFA2306F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09CB8146-F117-414F-B1F7-8CEFA2306F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE54480F-D3CA-40B6-B784-5CEB0D037D28}
+	EndGlobalSection
+EndGlobal
