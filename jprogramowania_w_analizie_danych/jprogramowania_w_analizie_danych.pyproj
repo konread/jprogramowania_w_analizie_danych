@@ -24,6 +24,9 @@
     <Compile Include="births.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="births2.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ecoli.py" />
     <Compile Include="libs.py">
       <SubType>Code</SubType>
