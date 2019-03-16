@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>09cb8146-f117-414f-b1f7-8cefa2306f58</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ecoli.py</StartupFile>
+    <StartupFile>births.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
