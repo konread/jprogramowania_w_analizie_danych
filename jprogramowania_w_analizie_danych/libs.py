@@ -27,7 +27,6 @@ def findMin(array):
 
 def findDominants(array):
     founded = Counter(array)
-    print(founded)
     maxValue=0
     result=[]
     for item in founded:

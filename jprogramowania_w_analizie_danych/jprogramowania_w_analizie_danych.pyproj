@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>09cb8146-f117-414f-b1f7-8cefa2306f58</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>births.py</StartupFile>
+    <StartupFile>ecoli.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,9 +22,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="births.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="births2.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ecoli.py" />
