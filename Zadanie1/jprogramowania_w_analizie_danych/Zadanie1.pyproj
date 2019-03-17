@@ -3,13 +3,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>09cb8146-f117-414f-b1f7-8cefa2306f58</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>births.py</StartupFile>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>ecoli.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>jprogramowania_w_analizie_danych</Name>
+    <Name>Zadanie1</Name>
     <RootNamespace>jprogramowania_w_analizie_danych</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
