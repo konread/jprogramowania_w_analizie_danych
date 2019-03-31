@@ -66,31 +66,66 @@ plt.plot(x_not_nan, intercept + slope * x_not_nan, 'r', label='regresja liniowa 
 plt.legend()
 #plt.show()
 
+# -- Zadanie na 4 --
+
+#Metoda interpolacji
+
+dataset_interpolate = dataset.copy()
+
+dataset_interpolate[header] = dataset_interpolate.interpolate(method="linear")
+
+print(dataset_interpolate)
+
+x_interpolate = dataset_interpolate['PT08.S1(CO)']
+y_interpolate = dataset_interpolate['C6H6(GT)']
+
+slope, intercept, r_value, p_value, std_err = stats.linregress(x_interpolate, y_interpolate)
+
+slope_interpolate = slope
+intercept_interpolate = intercept
+r_value_interpolate = r_value
+p_value_interpolate = p_value
+std_err_interpolate = std_err
+
+plt.plot(x_interpolate, y_interpolate, 'o', label = 'dane (po interpolacji)')
+plt.plot(x_interpolate, intercept + slope * x_interpolate, 'r', label = 'regresja liniowa (po interpolacji)', color='blue')
+plt.legend()
+#plt.show()
+
 print("---------------------------------------------")
 print("Nachylenie linii regresji (nan): " + str(slope_not_nan))
 print("Nachylenie linii regresji (mean imputation): " + str(slope_imputer))
+print("Nachylenie linii regresji (interpolate): " + str(slope_interpolate))
 print()
 print("Współczynnik korelacji (nan): " + str(r_value_not_nan))
 print("Współczynnik korelacji (mean imputation): " + str(r_value_imputer))
+print("Współczynnik korelacji (interpolate): " + str(r_value_interpolate))
 print()
 print("Błąd standrardowy (nan): " + str(std_err_not_nan))
 print("Błąd standrardowy (mean imputation): " + str(std_err_imputer))
+print("Błąd standrardowy (interpolate): " + str(std_err_interpolate))
 print("---------------------------------------------")
 print("Średnia x (nan): " + str(dataset['PT08.S1(CO)'].mean()))
 print("Średnia x (mean imputation): " + str(x_imputer.mean()))
+print("Średnia x (interpolate): " + str(x_interpolate.mean()))
 print()
 print("Średnia y (nan): " + str(dataset['C6H6(GT)'].mean()))
 print("Średnia y (mean imputation): " + str(y_imputer.mean()))
+print("Średnia y (interpolate): " + str(y_interpolate.mean()))
 print("---------------------------------------------")
 print("Odchylenie standardowe x (nan): " + str(dataset['PT08.S1(CO)'].std()))
 print("Odchylenie standardowe x (mean imputation): " + str(x_imputer.std()))
+print("Odchylenie standardowe x (interpolate): " + str(x_interpolate.std()))
 print()
 print("Odchylenie standardowe y (nan): " + str(dataset['C6H6(GT)'].std()))
 print("Odchylenie standardowe y (mean imputation): " + str(y_imputer.std()))
+print("Odchylenie standardowe y (interpolate): " + str(y_interpolate.std()))
 print("---------------------------------------------")
 print("Kwartyle x (nan): " + str(np.percentile(x_not_nan, [25, 25, 25, 25])))
 print("Kwartyle x (mean imputation): " + str(np.percentile(x_imputer, [25, 25, 25, 25])))
+print("Kwartyle x (interpolate): " + str(np.percentile(x_interpolate, [25, 25, 25, 25])))
 print()
 print("Kwartyle y (nan): " + str(np.percentile(y_not_nan, [25, 25, 25, 25])))
 print("Kwartyle y (mean imputation): " + str(np.percentile(y_imputer, [25, 25, 25, 25])))
+print("Kwartyle y (interpolate): " + str(np.percentile(y_interpolate, [25, 25, 25, 25])))
 print("---------------------------------------------")
