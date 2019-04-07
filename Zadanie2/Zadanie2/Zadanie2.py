@@ -135,43 +135,32 @@ plt.plot(x_hot_deck, intercept_hot_deck + slope_hot_deck * x_hot_deck, 'r', labe
 plt.legend()
 #plt.show()
 
-#print("---------------------------------------------")
-#print("Nachylenie linii regresji (without nan): " + str(slope_not_nan))
-#print("Nachylenie linii regresji (mean imputation): " + str(slope_imputer_mean))
-#print("Nachylenie linii regresji (interpolate): " + str(slope_interpolate))
-#print()
-#print("Współczynnik korelacji (without nan): " + str(r_value_not_nan))
-#print("Współczynnik korelacji (mean imputation): " + str(r_value_imputer_mean))
-#print("Współczynnik korelacji (interpolate): " + str(r_value_interpolate))
-#print()
-#print("Błąd standrardowy (without nan): " + str(std_err_not_nan))
-#print("Błąd standrardowy (mean imputation): " + str(std_err_imputer_mean))
-#print("Błąd standrardowy (interpolate): " + str(std_err_interpolate))
-#print("---------------------------------------------")
-#print("Średnia x (without nan): " + str(dataset['PT08.S1(CO)'].mean()))
-#print("Średnia x (mean imputation): " + str(x_imputer_mean.mean()))
-#print("Średnia x (interpolate): " + str(x_interpolate.mean()))
-#print()
-#print("Średnia y (without nan): " + str(dataset['C6H6(GT)'].mean()))
-#print("Średnia y (mean imputation): " + str(y_imputer_mean.mean()))
-#print("Średnia y (interpolate): " + str(y_interpolate.mean()))
-#print("---------------------------------------------")
-#print("Odchylenie standardowe x (without nan): " + str(dataset['PT08.S1(CO)'].std()))
-#print("Odchylenie standardowe x (mean imputation): " + str(x_imputer_mean.std()))
-#print("Odchylenie standardowe x (interpolate): " + str(x_interpolate.std()))
-#print()
-#print("Odchylenie standardowe y (without nan): " + str(dataset['C6H6(GT)'].std()))
-#print("Odchylenie standardowe y (mean imputation): " + str(y_imputer_mean.std()))
-#print("Odchylenie standardowe y (interpolate): " + str(y_interpolate.std()))
-#print("---------------------------------------------")
-#print("Kwartyle x (without nan): " + str(np.percentile(x_not_nan, [25, 25, 25, 25])))
-#print("Kwartyle x (mean imputation): " + str(np.percentile(x_imputer_mean, [25, 25, 25, 25])))
-#print("Kwartyle x (interpolate): " + str(np.percentile(x_interpolate, [25, 25, 25, 25])))
-#print()
-#print("Kwartyle y (without nan): " + str(np.percentile(y_not_nan, [25, 25, 25, 25])))
-#print("Kwartyle y (mean imputation): " + str(np.percentile(y_imputer_mean, [25, 25, 25, 25])))
-#print("Kwartyle y (interpolate): " + str(np.percentile(y_interpolate, [25, 25, 25, 25])))
-#print("---------------------------------------------")
+# Wartosci uzyskane z krzywej regresji z punktu 6
+dataset_regression_values = dataset.copy()
+x_regression = dataset_regression_values['PT08.S1(CO)'].values
+y_regression = dataset_regression_values['C6H6(GT)'].values
+
+for idx, value in enumerate(x_regression):
+    x_value = x_regression[idx]
+    y_value = y_regression[idx]
+    if math.isnan(x_value) and math.isnan(y_value):
+        x_regression[idx] = 0.0
+        y_regression[idx] = 0.0
+
+    if math.isnan(x_value) and not math.isnan(y_value):
+        value = intercept_imputer_mean + (slope_imputer_mean * y_value) + std_err_imputer_mean
+        x_regression[idx] = value
+
+    if not math.isnan(x_value) and math.isnan(y_value):
+        value = intercept_imputer_mean + (slope_imputer_mean * x_value) + std_err_imputer_mean
+        y_regression[idx] = value
+
+slope_regression, intercept_regression, r_value_regression, p_value_regression, std_err_regression = stats.linregress(x_regression, y_regression)
+
+plt.plot(x_regression, y_regression, 'o', label = 'dane (po krzywej regresji)')
+plt.plot(x_regression, intercept_regression + slope_regression * x_regression, 'r', label = 'regresja liniowa (po krzywej regresji)', color='gray')
+plt.legend()
+plt.show()
 
 result = dict()
 
@@ -229,6 +218,17 @@ result["Odchylenie standardowe x"].append(x_hot_deck.std())
 result["Odchylenie standardowe y"].append(y_hot_deck.std())
 result["Kwartyle x"].append(np.percentile(x_hot_deck, [25, 25, 25, 25]))
 result["Kwartyle y"].append(np.percentile(y_hot_deck, [25, 25, 25, 25]))
+
+result["Metoda"].append("Z krzywej regresji")
+result["Nachylenie linii regresji"].append(slope_regression)
+result["Wspolczynnik korelacji"].append(r_value_regression)
+result["Blad standrardowy"].append(std_err_regression)
+result["Srednia x"].append(x_regression.mean())
+result["Srednia y"].append(y_regression.mean())
+result["Odchylenie standardowe x"].append(x_regression.std())
+result["Odchylenie standardowe y"].append(y_regression.std())
+result["Kwartyle x"].append(np.percentile(x_regression, [25, 25, 25, 25]))
+result["Kwartyle y"].append(np.percentile(y_regression, [25, 25, 25, 25]))
 
 df = pd.DataFrame(result ,columns= ['Metoda', 
                                     'Nachylenie linii regresji', 
