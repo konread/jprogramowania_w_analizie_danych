@@ -7,6 +7,57 @@ from sklearn import preprocessing
 from sklearn import datasets
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
+import math
+from operator import itemgetter
+
+def hotDeckImputer(dataset, columnName):
+    dataset_with_missig_values = dataset[np.isnan(dataset[columnName])]
+    dataset_without_missig_values = dataset[dataset[columnName].notnull()]
+    rows, columns = dataset_with_missig_values.shape
+    datasetColumn = dataset[columnName].values
+    computedMissingValues = []
+
+    # For each missing element in data set
+    for idxMissingValues, rowMissingValues in enumerate(dataset_with_missig_values.values):
+        euclidean = []
+        # Loop all non-missing rows...
+        for idxNoneMissValues, rowNoneMissValues in enumerate(dataset_without_missig_values.values):
+            euclideanTotal = 0
+            # ...and all of its columns...
+            for idxCol in range(columns):
+                # ...except itself...
+                rowMissingValue = rowMissingValues[idxCol]
+                rowNoneMissValue = rowNoneMissValues[idxCol]
+                if not math.isnan(rowMissingValue) and not math.isnan(rowNoneMissValue):
+                    # ...to calculate the euclidean distance of both...
+                    euclideanTotal += (rowMissingValue - rowNoneMissValue) ** 2
+
+            dist = math.sqrt(euclideanTotal)
+            # Append found euclidean and index of that in the original data set
+            if dist != 0.0:
+                euclidean.append((dist, idxNoneMissValues))
+
+        # Sorts the euclidean list by their first value
+        euclidean = sorted(euclidean, key=itemgetter(0))
+
+        if not euclidean:
+            computedMissingValues.append(0.0)
+
+        for euclideanValue, euclideanIdx in euclidean:
+            columnValues = dataset_without_missig_values[columnName].values
+            value = columnValues[euclideanIdx]
+            if not math.isnan(value):
+                computedMissingValues.append(value)
+                break
+
+    idx = 0
+    for idxDsCol, value in enumerate(datasetColumn):
+        if math.isnan(value):
+            datasetColumn[idxDsCol] = computedMissingValues[idx]
+            idx += 1
+
+    return datasetColumn
+
 
 # -- Zadanie na 3 --
 dataset = pd.read_csv('AirQualityUCI.csv', ';')
@@ -71,7 +122,18 @@ slope_interpolate, intercept_interpolate, r_value_interpolate, p_value_interpola
 plt.plot(x_interpolate, y_interpolate, 'o', label = 'dane (po interpolacji)')
 plt.plot(x_interpolate, intercept_interpolate + slope_interpolate * x_interpolate, 'r', label = 'regresja liniowa (po interpolacji)', color='blue')
 plt.legend()
-plt.show()
+#plt.show()
+
+# Metoda hot-deck
+x_hot_deck = hotDeckImputer(dataset.copy(), 'PT08.S1(CO)')
+y_hot_deck = hotDeckImputer(dataset.copy(), 'C6H6(GT)')
+
+slope_hot_deck, intercept_hot_deck, r_value_hot_deck, p_value_hot_deck, std_err_hot_deck = stats.linregress(x_hot_deck, y_hot_deck)
+
+plt.plot(x_hot_deck, y_hot_deck, 'o', label = 'dane (po hot-deck)')
+plt.plot(x_hot_deck, intercept_hot_deck + slope_hot_deck * x_hot_deck, 'r', label = 'regresja liniowa (po hot-deck)', color='orange')
+plt.legend()
+#plt.show()
 
 #print("---------------------------------------------")
 #print("Nachylenie linii regresji (without nan): " + str(slope_not_nan))
@@ -157,6 +219,16 @@ result["Odchylenie standardowe y"].append(y_interpolate.std())
 result["Kwartyle x"].append(np.percentile(x_interpolate, [25, 25, 25, 25]))
 result["Kwartyle y"].append(np.percentile(y_interpolate, [25, 25, 25, 25]))
 
+result["Metoda"].append("hot-deck")
+result["Nachylenie linii regresji"].append(slope_hot_deck)
+result["Wspolczynnik korelacji"].append(r_value_hot_deck)
+result["Blad standrardowy"].append(std_err_hot_deck)
+result["Srednia x"].append(x_hot_deck.mean())
+result["Srednia y"].append(y_hot_deck.mean())
+result["Odchylenie standardowe x"].append(x_hot_deck.std())
+result["Odchylenie standardowe y"].append(y_hot_deck.std())
+result["Kwartyle x"].append(np.percentile(x_hot_deck, [25, 25, 25, 25]))
+result["Kwartyle y"].append(np.percentile(y_hot_deck, [25, 25, 25, 25]))
 
 df = pd.DataFrame(result ,columns= ['Metoda', 
                                     'Nachylenie linii regresji', 
