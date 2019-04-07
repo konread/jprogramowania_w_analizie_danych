@@ -124,7 +124,7 @@ result["Odchylenie standardowe y"] = []
 result["Kwartyle x"] = []
 result["Kwartyle y"] = []
 
-result["Metoda"].append("nan")
+result["Metoda"].append("without nan")
 result["Nachylenie linii regresji"].append(slope_not_nan)
 result["Wspolczynnik korelacji"].append(r_value_not_nan)
 result["Blad standrardowy"].append(std_err_not_nan)
@@ -135,7 +135,7 @@ result["Odchylenie standardowe y"].append(dataset['C6H6(GT)'].std())
 result["Kwartyle x"].append(np.percentile(x_not_nan, [25, 25, 25, 25]))
 result["Kwartyle y"].append(np.percentile(y_not_nan, [25, 25, 25, 25]))
 
-result["Metoda"].append("mean")
+result["Metoda"].append("mean imputation")
 result["Nachylenie linii regresji"].append(slope_imputer_mean)
 result["Wspolczynnik korelacji"].append(r_value_imputer_mean)
 result["Blad standrardowy"].append(std_err_imputer_mean)
