@@ -1,4 +1,5 @@
 import re as re
+import sklearn
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -14,6 +15,11 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
 from sklearn.feature_selection import chi2
 from sklearn.feature_selection import SelectKBest
+from sklearn.utils import shuffle
+from random import Random
+from warnings import filterwarnings
+
+filterwarnings('ignore')
 
 def classifier(train_x, test_x, train_y, test_y):
     step = 1
@@ -24,9 +30,10 @@ def classifier(train_x, test_x, train_y, test_y):
     while iter < max:
         model = svm.LinearSVC(max_iter = float(iter))
         model.fit(train_x, train_y.values.ravel())
-        model.predict(test_x)
-        model_score = model.score(test_x, test_y.values.ravel())
-    
+        predictions_test = model.predict(test_x)
+        #model_score = model.score(test_x, test_y.values.ravel())
+        model_score = accuracy_score(test_y, predictions_test)
+
         result.append(model_score)
     
         iter += step
@@ -39,7 +46,7 @@ def main():
     dataset = pd.read_csv('data.csv', names = names)
 
     df = pd.DataFrame(dataset)
-    
+
     scaler = MinMaxScaler()
 
     classLabelAttribute = ["Cultivar"]
@@ -52,13 +59,13 @@ def main():
 
     train_size = 0.75
     test_size = 0.25
-    shuffle = True;
+    _shuffle = True;
 
     train_x, test_x, train_y, test_y = train_test_split(data, 
                                                         target, 
                                                         train_size = train_size, 
                                                         test_size = test_size,
-                                                        shuffle = shuffle)
+                                                        shuffle = _shuffle)
     
     plt.plot(classifier(train_x, test_x, train_y, test_y), label = 'Wszystkie cechy')
     #plt.show()
@@ -78,11 +85,11 @@ def main():
     pca_data = pca_df[pca_observationsLabelAttribute]
     
     pca_train_x, pca_test_x, pca_train_y, pca_test_y = train_test_split(pca_data, 
-                                                                         pca_target, 
-                                                                         train_size = train_size, 
-                                                                         test_size = test_size,
-                                                                         shuffle = shuffle)
-    
+                                                                        pca_target, 
+                                                                        train_size = train_size, 
+                                                                        test_size = test_size,
+                                                                        shuffle = _shuffle)
+
     plt.plot(classifier(pca_train_x, pca_test_x, pca_train_y, pca_test_y), label = 'Wybrane cechy (PCA)')
     #plt.show()
 
@@ -95,13 +102,11 @@ def main():
     var_target = pca_df[classLabelAttribute]
     var_data = df[var_observationsLabelAttribute]
 
-    print(var_data)
-    
     var_train_x, var_test_x, var_train_y, var_test_y = train_test_split(var_data, 
                                                                         var_target, 
                                                                         train_size = train_size, 
                                                                         test_size = test_size,
-                                                                        shuffle = shuffle)
+                                                                        shuffle = _shuffle)
 
     plt.plot(classifier(var_train_x, var_test_x, var_train_y, var_test_y), label = 'Wybrane cechy (wariancja)')
     #plt.show()
@@ -123,7 +128,7 @@ def main():
                                                                             chi2_target, 
                                                                             train_size = train_size, 
                                                                             test_size = test_size,
-                                                                            shuffle = shuffle)
+                                                                            shuffle = _shuffle)
     
     plt.plot(classifier(chi2_train_x, chi2_test_x, chi2_train_y, chi2_test_y), label = 'Wybrane cechy (chi2)')
     plt.legend()
